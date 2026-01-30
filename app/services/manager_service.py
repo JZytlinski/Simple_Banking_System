@@ -1,7 +1,7 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from streamlit import status
 from app.models.manager import Manager
-from app.models.person import PersonRole
+from app.models.person import Person, PersonRole
 
 
 def get_manager_or_404(db: Session, manager_id: str) -> Manager:
@@ -21,6 +21,10 @@ def get_all_managers(db: Session):
 
 
 def create_manager(db: Session, id: str, name: str, surname: str, email: str):
+
+    if db.get(Person, id):
+        raise HTTPException(status_code=400, detail="User with this ID already exists")
+
     manager = Manager(
         id=id, name=name, surname=surname, email=email, role=PersonRole.MANAGER
     )

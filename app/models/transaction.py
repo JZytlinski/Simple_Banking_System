@@ -41,11 +41,11 @@ class Transaction(Base):
 
     def __str__(self):
         mark = " [REVERSED]" if self.is_reversed else ""
-        return f"Transaction(Type: {self.type}, Amount: {self.amount}, Time: {self.created_at}{mark}"
+        return f"Transaction(Type: {self.type}, Amount: {self.amount}, Time: {self.timestamp}{mark}"
 
     def __repr__(self):
         return (
             f"Transaction(id={self.transaction_id}, client_id={self.client_id}, "
-            f"type='{self.type}', amount={self.amount}, created_at={self.created_at}, is_reversed={self.is_reversed},"
+            f"type='{self.type}', amount={self.amount}, timestamp={self.timestamp}, is_reversed={self.is_reversed},"
             f"reversal_of_id={self.reversal_of_id}, reversed_by_id={self.reversed_by_id})"
         )

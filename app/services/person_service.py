@@ -12,6 +12,7 @@ def _to_money(value) -> Decimal:
         raise HTTPException("Invalid amount format")
     return d
 
+
 def get_person_or_404(db: Session, person_id: str) -> Person:
     person = db.get(Person, person_id)
     if not person:

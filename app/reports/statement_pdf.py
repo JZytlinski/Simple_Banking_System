@@ -134,46 +134,24 @@ def build_statement_pdf(client, transactions) -> bytes:
     table.setStyle(table_style)
     story.append(table)
 
-    deposits = sum(
-        Decimal(str(t.amount))
-        for t in txs
-        if t.type == "deposit" and not getattr(t, "is_reversed", False)
-    )
-    withdrawals = sum(
-        Decimal(str(t.amount))
-        for t in txs
-        if t.type == "withdrawal" and not getattr(t, "is_reversed", False)
-    )
-    transfer_in = sum(
-        Decimal(str(t.amount))
-        for t in txs
-        if t.type == "transfer_in" and not getattr(t, "is_reversed", False)
-    )
-    transfer_out = sum(
-        Decimal(str(t.amount))
-        for t in txs
-        if t.type == "transfer_out" and not getattr(t, "is_reversed", False)
-    )
+    deposits = sum(Decimal(str(t.amount)) for t in txs if t.type == "deposit")
+    withdrawals = sum(Decimal(str(t.amount)) for t in txs if t.type == "withdrawal")
+
+    transfer_in = sum(Decimal(str(t.amount)) for t in txs if t.type == "transfer_in")
+    transfer_out = sum(Decimal(str(t.amount)) for t in txs if t.type == "transfer_out")
     story.append(Spacer(1, 12))
     story.append(
-        Paragraph(f"Total Deposits: <b>{fmt_money(deposits)}</b>", styles["Normal"])
-    )
-    story.append(
         Paragraph(
-            f"Total Withdrawals: <b>{fmt_money(withdrawals)}</b>", styles["Normal"]
-        )
-    )
-    story.append(
-        Paragraph(
-            f"Total Transfer In: <b>{fmt_money(transfer_in)}</b>", styles["Normal"]
-        )
-    )
-    story.append(
-        Paragraph(
-            f"Total Transfer Out: <b>{fmt_money(transfer_out)}</b>", styles["Normal"]
+            f"Total In: <b>{fmt_money(deposits + transfer_in)}</b>", styles["Normal"]
         )
     )
 
+    story.append(
+        Paragraph(
+            f"Total Out: <b>{fmt_money(withdrawals + transfer_out)}</b>",
+            styles["Normal"],
+        )
+    )
     story.append(
         Paragraph(
             f"Net Change: <b>{fmt_money(deposits + transfer_in - transfer_out - withdrawals)}</b>",

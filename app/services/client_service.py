@@ -5,7 +5,7 @@ from fastapi import HTTPException
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from app.models.client import Client
-from app.models.person import PersonRole
+from app.models.person import Person, PersonRole
 from app.models.transaction import Transaction
 from app.reports.statement_pdf import build_statement_pdf
 from app.services.person_service import _to_money
@@ -83,9 +83,15 @@ def create_client(
     email: str,
     initial_balance: Decimal | float | int = 0,
 ):
+
+    if db.get(Person, id):
+        raise HTTPException(status_code=400, detail="User with this ID already exists")
+
     init = _to_money(initial_balance)
     if init < Decimal("0.00"):
-        raise HTTPException("Initial balance cannot be negative")
+        raise HTTPException(
+            status_code=400, detail="Initial balance cannot be negative"
+        )
 
     client = Client(
         id=id, name=name, surname=surname, email=email, role=PersonRole.CLIENT
@@ -116,7 +122,7 @@ def create_transfer(db: Session, sender_id: str, receiver_id: str, amount: Decim
     if sender.balance < amount:
         raise HTTPException(400, "Sender does not have enough balance.")
 
-    group_id = uuid.uuid4().int
+    group_id = uuid.uuid4().int % ((1 << 63) - 1)
 
     tx_out = Transaction(
         client_id=sender_id,

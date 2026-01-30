@@ -52,7 +52,7 @@ def build_transaction_filters(prefix="tx_", filter_by_id=True):
 
     types = st.multiselect(
         "Type",
-        ["deposit", "withdrawal"],
+        ["deposit", "withdrawal", "transfer_in", "transfer_out"],
         help="Leave empty to include all",
         key=f"{prefix}types",
     )

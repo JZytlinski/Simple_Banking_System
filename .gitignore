@@ -32,6 +32,9 @@ coverage.xml
 .idea/
 *.iml
 
+# Database
+*.db
+
 # Logs
 *.log
 logs/
