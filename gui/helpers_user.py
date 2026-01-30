@@ -1,5 +1,6 @@
 import pandas as pd
 import streamlit as st
+from datetime import datetime
 
 from helpers import (
     apply_date_filters,
@@ -138,10 +139,6 @@ def prepare_manager_df(managers):
         ["ID", "Name", "Surname", "Email", "Created"],
         parse_date=True,
     )
-
-
-import streamlit as st
-from datetime import datetime
 
 
 def render_profile_base(data, person_id, title="Profile", extra_fields=None):
